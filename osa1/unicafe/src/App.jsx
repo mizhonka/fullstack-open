@@ -3,14 +3,37 @@ import { useState } from 'react'
 const Header=(props)=><h1>{props.text}</h1>
 
 const Stats=(props)=>{
+  if(props.total==0)return <p>No feedback given</p>
   return(
     <>
-    <p>Good: {props.good}</p>
-    <p>Neutral: {props.neutral}</p>
-    <p>Bad: {props.bad}</p>
-    <p>Total: {props.total}</p>
-    <p>Avarage: {props.average}</p>
-    <p>Positive: {props.positive}%</p>
+    <table>
+      <tbody>
+        <tr>
+          <th scope='row'>Good</th>
+          <td>{props.good}</td>
+        </tr>
+        <tr>
+          <th scope='row'>Neutral</th>
+          <td>{props.neutral}</td>
+        </tr>
+        <tr>
+          <th scope='row'>Bad</th>
+          <td>{props.bad}</td>
+        </tr>
+        <tr>
+          <th scope='row'>Total</th>
+          <td>{props.total}</td>
+        </tr>
+        <tr>
+          <th scope='row'>Average</th>
+          <td>{props.average}</td>
+        </tr>
+        <tr>
+          <th scope='row'>Positive</th>
+          <td>{props.positive}%</td>
+        </tr>
+      </tbody>
+    </table>
     </>
   )
 }
@@ -49,13 +72,11 @@ const App = () => {
   }
 
   const countAverage=()=>{
-    if (total==0)return 0
-    else return (good*1+bad*-1)/total
+    return (good*1+bad*-1)/total
   }
 
   const countPositive=()=>{
-    if (total==0)return 0
-    else return good/total*100
+    return good/total*100
   }
 
   return (
