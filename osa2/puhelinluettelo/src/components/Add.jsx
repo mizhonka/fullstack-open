@@ -1,7 +1,7 @@
-const Add=({checkForName, handleAlert, addNote, newName,newNumber,handleNoteChange,handleNumberChange})=>{
+const Add=({nameCheck, handleAlert, addNote, newName,newNumber,handleNoteChange,handleNumberChange})=>{
     return(
         <>
-        <form onSubmit={checkForName() ? handleAlert:addNote}>
+        <form onSubmit={nameCheck ? handleAlert:addNote}>
             <div>
             name: <input value={newName} onChange={handleNoteChange}/>
             </div>
