@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
 import Filter from './components/Filter'
 import Add from './components/Add'
 import Content from './components/Content'
+import personService from './services/persons'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,10 +11,18 @@ const App = () => {
   const [filterName, setFilterName]=useState('')
 
   useEffect(()=>{
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {setPersons(response.data)})
+    personService
+      .getAll()
+        .then(initial=>setPersons(initial))
   }, [])
+
+  const invokeDelete=id=>{
+    if(confirm(`Delete ${persons.filter(person=>person.id===id).map(person=>person.name)}?`)){
+      personService
+      .deletePerson(id)
+      .then(returnedPerson=>setPersons(persons.filter(person=>person.id!==returnedPerson.id)))
+    }
+  }
 
   const checkForName=()=>{
     return persons.map(person=>person.name).includes(newName)
@@ -22,18 +30,30 @@ const App = () => {
 
   const handleAlert=(event)=>{
     event.preventDefault()
-    alert(`${newName} is already added`)
+    if(confirm(`${newName} is already added, update number?`)){
+      const updated={
+        name:newName,
+        number:newNumber
+      }
+      setNewName('')
+      setNewNumber('')
+      personService
+      .update(persons.filter(person=>person.name===newName).map(person=>person.id), updated)
+        .then(returnedPerson=>{setPersons(persons.map(person=>person.id!==returnedPerson.id?person:returnedPerson))})
+    }
   }
 
   const addNote=(event)=>{
     event.preventDefault()
     const addedName={
       name:newName,
-      number:newNumber
+      number:newNumber,
     }
-    setPersons(persons.concat(addedName))
-    setNewName("")
-    setNewNumber("")
+    personService
+      .create(addedName)
+        .then(returnedPerson=>{setPersons(persons.concat(returnedPerson))
+        setNewName("")
+        setNewNumber("")})
   }
 
   const handleNoteChange=(event)=>{
@@ -63,7 +83,7 @@ const App = () => {
       <h2>Add new</h2>
       <Add nameCheck={checkForName()} handleAlert={handleAlert} addNote={addNote} newName={newName} newNumber={newNumber} handleNoteChange={handleNoteChange} handleNumberChange={handleNumberChange}/>
       <h2>Numbers</h2>
-      <Content persons={filtered()}/>
+      <Content persons={filtered()} invokeDelete={invokeDelete}/>
     </div>
   )
 
