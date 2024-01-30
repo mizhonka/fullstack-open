@@ -26,10 +26,14 @@ const App=()=> {
     return countries.filter(searchFilter)
   }
 
+  const showPage=(country)=>{
+    setSearch(country)
+  }
+
   return(
     <>
       <SearchField search={search} handleSearchChange={handleSearchChange}/>
-      <Content countries={filtered()}/>
+      <Content countries={filtered()} showPage={showPage}/>
     </>
   )
 }

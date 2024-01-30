@@ -1,6 +1,6 @@
-const CountryTitle=({country})=>{
+const CountryTitle=({country, showPage})=>{
     return(
-        <p>{country.name.common}</p>
+        <p>{country.name.common} <button onClick={()=>showPage(country.name.common)}>show</button></p>
     )
 }
 
