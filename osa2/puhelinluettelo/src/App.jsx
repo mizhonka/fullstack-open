@@ -3,12 +3,15 @@ import Filter from './components/Filter'
 import Add from './components/Add'
 import Content from './components/Content'
 import personService from './services/persons'
+import Notification from './components/Notification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber]=useState('')
   const [filterName, setFilterName]=useState('')
+  const [successMessage, setSuccessMessage]=useState('')
+  const [errorMessage, setErrorMessage]=useState('')
 
   useEffect(()=>{
     personService
@@ -20,7 +23,9 @@ const App = () => {
     if(confirm(`Delete ${persons.filter(person=>person.id===id).map(person=>person.name)}?`)){
       personService
       .deletePerson(id)
-      .then(returnedPerson=>setPersons(persons.filter(person=>person.id!==returnedPerson.id)))
+      .then(returnedPerson=>{setPersons(persons.filter(person=>person.id!==returnedPerson.id))
+        setSuccessMessage('Contact deleted')
+        setTimeout(()=>setSuccessMessage(''), 5000)})
     }
   }
 
@@ -39,7 +44,11 @@ const App = () => {
       setNewNumber('')
       personService
       .update(persons.filter(person=>person.name===newName).map(person=>person.id), updated)
-        .then(returnedPerson=>{setPersons(persons.map(person=>person.id!==returnedPerson.id?person:returnedPerson))})
+        .then(returnedPerson=>{setPersons(persons.map(person=>person.id!==returnedPerson.id?person:returnedPerson))
+          setSuccessMessage('Contact updated')
+          setTimeout(()=>setSuccessMessage(''), 5000)})
+        .catch(error=>{setErrorMessage(`${newName} has already been deleted`)
+        setTimeout(()=>setErrorMessage(''), 5000)})
     }
   }
 
@@ -53,7 +62,9 @@ const App = () => {
       .create(addedName)
         .then(returnedPerson=>{setPersons(persons.concat(returnedPerson))
         setNewName("")
-        setNewNumber("")})
+        setNewNumber("")
+        setSuccessMessage('New contact added')
+        setTimeout(()=>setSuccessMessage(''), 5000)})
   }
 
   const handleNoteChange=(event)=>{
@@ -79,6 +90,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={successMessage} style={'success'}/>
+      <Notification message={errorMessage} style={'error'}/>
       <Filter filterName={filterName} handleFilterChange={handleFilterChange}/>
       <h2>Add new</h2>
       <Add nameCheck={checkForName()} handleAlert={handleAlert} addNote={addNote} newName={newName} newNumber={newNumber} handleNoteChange={handleNoteChange} handleNumberChange={handleNumberChange}/>
