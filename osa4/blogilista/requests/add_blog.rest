@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Recipes",
-    "author": "Jamie Oliveoil",
-    "url": "link.com",
-    "likes": 10
+    "title": "Programs",
+    "author": "Ada Lovelace",
+    "url": "program.com",
+    "likes": 12
 }
