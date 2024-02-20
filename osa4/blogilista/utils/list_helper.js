@@ -16,25 +16,43 @@ const favoriteBlog=(blogs) => {
 
 const mostBlogs=(blogs) => {
 	const authors=blogs.map(blog => blog.author)
-	let count=new Map()
-	for(const i in authors){
-		const a=authors[i]
-		if(!count.get(a)){count.set(a, 1)}
-		else {count.set(a, count.get(a)+1)}
-	}
+	const uniqueAuthors=Array.from(new Set(authors))
 
 	let result=''
-	let maxCount=0
-	count.forEach((posts, author) => {
-		if(posts>=maxCount){
-			maxCount=posts
+	let maxPosts=0
+	for(const i in uniqueAuthors){
+		const author=uniqueAuthors[i]
+		const n=blogs.filter(blog => blog.author===author).length
+		if(n>maxPosts){
 			result=author
+			maxPosts=n
 		}
-	})
+	}
 
 	return {
 		author: result,
-		blogs: maxCount
+		blogs: maxPosts
+	}
+}
+
+const mostLikes=(blogs) => {
+	const authors=blogs.map(blog => blog.author)
+	const uniqueAuthors=Array.from(new Set(authors))
+
+	let result=''
+	let mostLikes=0
+	for(const i in uniqueAuthors){
+		const author=uniqueAuthors[i]
+		const likes=blogs.filter(blog => blog.author===author).reduce((x, blog) => x+blog.likes, 0)
+		if(likes>mostLikes){
+			mostLikes=likes
+			result=author
+		}
+	}
+
+	return {
+		author: result,
+		likes: mostLikes
 	}
 }
 
@@ -42,7 +60,8 @@ module.exports = {
 	dummy,
 	sum,
 	favoriteBlog,
-	mostBlogs
+	mostBlogs,
+	mostLikes
 }
 
 

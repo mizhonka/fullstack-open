@@ -97,3 +97,36 @@ describe('most blogs', () => {
 		}, result)
 	})
 })
+
+describe('most likes', () => {
+	test('of empty list is no-one', () => {
+		const result=list_helper.mostLikes([])
+		assert.deepEqual({
+			author: '',
+			likes: 0
+		}, result)
+	})
+
+	test('when list has only one blog equals them', () => {
+		const result=list_helper.mostLikes([{
+			_id: '5a422a851b54a676234d17f7',
+			title: 'React patterns',
+			author: 'Michael Chan',
+			url: 'https://reactpatterns.com/',
+			likes: 7,
+			__v: 0
+		}])
+		assert.deepEqual({
+			author: 'Michael Chan',
+			likes: 7
+		}, result)
+	})
+
+	test('of a bigger list is correct',() => {
+		const result=list_helper.mostLikes(sampleBlogs.blogs)
+		assert.deepEqual({
+			author: 'Edsger W. Dijkstra',
+			likes: 17
+		}, result)
+	})
+})
