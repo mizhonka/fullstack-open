@@ -32,3 +32,35 @@ describe('total likes', () => {
 		assert.strictEqual(result, 36)
 	})
 })
+
+describe('favorite blog', () => {
+	test('of empty list is none', () => {
+		const result=list_helper.favoriteBlog([])
+		assert.deepEqual({}, result)
+	})
+
+	test('when list has only one blog equals that', () => {
+		const result=list_helper.favoriteBlog([{
+			_id: '5a422a851b54a676234d17f7',
+			title: 'React patterns',
+			author: 'Michael Chan',
+			url: 'https://reactpatterns.com/',
+			likes: 7,
+			__v: 0
+		}])
+		assert.deepEqual({
+			title: 'React patterns',
+			author: 'Michael Chan',
+			likes: 7
+		}, result)
+	})
+
+	test('of a bigger list is correct', () => {
+		const result=list_helper.favoriteBlog(sampleBlogs.blogs)
+		assert.deepEqual({
+			title: 'Canonical string reduction',
+			author: 'Edsger W. Dijkstra',
+			likes: 12
+		}, result)
+	})
+})
