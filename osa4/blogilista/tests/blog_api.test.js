@@ -69,6 +69,21 @@ test('likes is set to 0 if null', async()=>{
     assert.strictEqual(addedBlog[0].likes, 0)
 })
 
+test('blog without title or url are not added', async()=>{
+    const newBlog={
+        author: 'Lazy One'
+    }
+    await api
+		.post('/api/blogs')
+		.send(newBlog)
+		.expect(400)
+		.expect('Content-Type', /application\/json/)
+
+    const response=await api.get('/api/blogs')
+
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
 after(async () => {
 	await mongoose.connection.close()
 })
