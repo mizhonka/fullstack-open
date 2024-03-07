@@ -19,6 +19,15 @@ test('get correct amount of blogs', async() => {
 	assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test('blogs has id', async()=>{
+    const response=await api.get('/api/blogs')
+
+    response.body.forEach(blog => {
+        assert('id' in blog)
+        assert(!('_id' in blog))
+    })
+})
+
 after(async () => {
-	mongoose.connection.close()
+	await mongoose.connection.close()
 })
