@@ -1,19 +1,21 @@
 const { test, after, beforeEach, describe } =require('node:test')
+const bcrypt=require('bcrypt')
 const assert=require('node:assert')
 const mongoose=require('mongoose')
 const supertest=require('supertest')
 const app = require('../app')
 const Blog =require('../models/blog')
+const User=require('../models/user')
 const helper=require('./test_helper')
 
 const api = supertest(app)
 
-beforeEach(async () => {
-	await Blog.deleteMany({})
-	await Blog.insertMany(helper.initialBlogs)
-})
-
 describe('when initial blogs exist', () => {
+	beforeEach(async () => {
+		await Blog.deleteMany({})
+		await Blog.insertMany(helper.initialBlogs)
+	})
+
 	test('get correct amount of blogs', async() => {
 		const response=await api.get('/api/blogs')
 
@@ -129,6 +131,39 @@ describe('when initial blogs exist', () => {
 			assert(ids.includes(blogToBeUpdated.id))
 			assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
 		})
+	})
+})
+
+describe('when initial users exist', () => {
+	beforeEach(async() => {
+		await User.deleteMany({})
+
+		const passwordhash=await bcrypt.hash('sekret', 10)
+		const newUser=new User({ username: 'root', passwordhash })
+
+		await newUser.save()
+	})
+
+	test('creation succeeds with new username', async() => {
+		const usersAtStart=await helper.usersInDB()
+
+		const newUser={
+			username: 'mizhonka',
+			name: 'MH',
+			password: 'mystery'
+		}
+
+		await api
+			.post('/api/users')
+			.send(newUser)
+			.expect(201)
+			.expect('Content-Type', /application\/json/)
+
+		const usersAtEnd=await helper.usersInDB()
+		const usernames=usersAtEnd.map(u => u.username)
+
+		assert(usernames.includes(newUser.username))
+		assert.strictEqual(usersAtStart.length+1, usersAtEnd.length)
 	})
 })
 
