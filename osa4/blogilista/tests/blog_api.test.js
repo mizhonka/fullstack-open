@@ -13,96 +13,123 @@ beforeEach(async () => {
 	await Blog.insertMany(helper.initialBlogs)
 })
 
-describe('when initial blogs exist', ()=>{
-    test('get correct amount of blogs', async() => {
-        const response=await api.get('/api/blogs')
+describe('when initial blogs exist', () => {
+	test('get correct amount of blogs', async() => {
+		const response=await api.get('/api/blogs')
 
-        assert.strictEqual(response.body.length, helper.initialBlogs.length)
-    })
+		assert.strictEqual(response.body.length, helper.initialBlogs.length)
+	})
 
-    test('blogs have id', async() => {
-        const response=await api.get('/api/blogs')
+	test('blogs have id', async() => {
+		const response=await api.get('/api/blogs')
 
-        response.body.forEach(blog => {
-            assert('id' in blog)
-            assert(!('_id' in blog))
-        })
-    })
+		response.body.forEach(blog => {
+			assert('id' in blog)
+			assert(!('_id' in blog))
+		})
+	})
 
-    describe('adding blogs', ()=>{
-        test('valid blog can be added', async() => {
-            const newBlog={
-                title: 'Will this be added?',
-                author: 'Mr. Unknown',
-                url: 'www.somewhere.co',
-                likes: 4
-            }
+	describe('adding blogs', () => {
+		test('valid blog can be added', async() => {
+			const newBlog={
+				title: 'Will this be added?',
+				author: 'Mr. Unknown',
+				url: 'www.somewhere.co',
+				likes: 4
+			}
 
-            await api
-                .post('/api/blogs')
-                .send(newBlog)
-                .expect(201)
-                .expect('Content-Type', /application\/json/)
+			await api
+				.post('/api/blogs')
+				.send(newBlog)
+				.expect(201)
+				.expect('Content-Type', /application\/json/)
 
-            const response=await api.get('/api/blogs')
-            const titles=response.body.map(r => r.title)
+			const response=await api.get('/api/blogs')
+			const titles=response.body.map(r => r.title)
 
-            assert.strictEqual(response.body.length, helper.initialBlogs.length+1)
-            assert(titles.includes('Will this be added?'))
-        })
+			assert.strictEqual(response.body.length, helper.initialBlogs.length+1)
+			assert(titles.includes('Will this be added?'))
+		})
 
-        test('likes is set to 0 if null', async()=>{
-            const newBlog={
-                title: 'No Likes',
-                author: 'Some One',
-                url: 'qwerty.com'
-            }
+		test('likes is set to 0 if null', async() => {
+			const newBlog={
+				title: 'No Likes',
+				author: 'Some One',
+				url: 'qwerty.com'
+			}
 
-            await api
-                .post('/api/blogs')
-                .send(newBlog)
-                .expect(201)
-                .expect('Content-Type', /application\/json/)
+			await api
+				.post('/api/blogs')
+				.send(newBlog)
+				.expect(201)
+				.expect('Content-Type', /application\/json/)
 
-            const response=await api.get('/api/blogs')
-            const addedBlog=response.body.filter(r=>r.title==newBlog.title)
+			const response=await api.get('/api/blogs')
+			const addedBlog=response.body.filter(r => r.title===newBlog.title)
 
-            assert.strictEqual(response.body.length, helper.initialBlogs.length+1)
-            assert.strictEqual(addedBlog[0].likes, 0)
-        })
+			assert.strictEqual(response.body.length, helper.initialBlogs.length+1)
+			assert.strictEqual(addedBlog[0].likes, 0)
+		})
 
-        test('blog without title or url are not added', async()=>{
-            const newBlog={
-                author: 'Lazy One'
-            }
-            await api
-                .post('/api/blogs')
-                .send(newBlog)
-                .expect(400)
-                .expect('Content-Type', /application\/json/)
+		test('blog without title or url are not added', async() => {
+			const newBlog={
+				author: 'Lazy One'
+			}
+			await api
+				.post('/api/blogs')
+				.send(newBlog)
+				.expect(400)
+				.expect('Content-Type', /application\/json/)
 
-            const response=await api.get('/api/blogs')
+			const response=await api.get('/api/blogs')
 
-            assert.strictEqual(response.body.length, helper.initialBlogs.length)
-        })
-    })
+			assert.strictEqual(response.body.length, helper.initialBlogs.length)
+		})
+	})
 
-    describe('deleting blogs', ()=>{
-        test('blog can be deleted', async()=>{
-            const blogsAtStart=await helper.blogsInDB()
-            const blogToBeDeleted=blogsAtStart[0]
+	describe('deleting blogs', () => {
+		test('blog can be deleted', async() => {
+			const blogsAtStart=await helper.blogsInDB()
+			const blogToBeDeleted=blogsAtStart[0]
 
-            await api
-                .delete(`/api/blogs/${blogToBeDeleted.id}`)
-                .expect(204)
+			await api
+				.delete(`/api/blogs/${blogToBeDeleted.id}`)
+				.expect(204)
 
-            const blogsAtEnd=await helper.blogsInDB()
-            const existingIDs=blogsAtEnd.map(b=>b.id)
+			const blogsAtEnd=await helper.blogsInDB()
+			const existingIDs=blogsAtEnd.map(b => b.id)
 
-            assert(!(blogToBeDeleted.id in existingIDs))
-            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length-1)
-        })
-    })
+			assert(!(blogToBeDeleted.id in existingIDs))
+			assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length-1)
+		})
+	})
+
+	describe('updating blogs', () => {
+		test('blog likes can be updated', async() => {
+			const blogsAtStart=await helper.blogsInDB()
+			const blogToBeUpdated=blogsAtStart[0]
+
+			const newBlog={
+				title: blogToBeUpdated.title,
+				author: blogToBeUpdated.author,
+				url: blogToBeUpdated.url,
+				likes: 100
+			}
+
+			await api
+				.put(`/api/blogs/${blogToBeUpdated.id}`)
+				.send(newBlog)
+				.expect(200)
+
+			const blogsAtEnd=await helper.blogsInDB()
+			const ids=blogsAtEnd.map(b => b.id)
+			const likes=blogsAtEnd.map(b => b.likes)
+
+			assert(likes.includes(newBlog.likes))
+			assert(ids.includes(blogToBeUpdated.id))
+			assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+		})
+	})
 })
 
 after(async () => {
