@@ -86,6 +86,23 @@ describe('when initial blogs exist', ()=>{
             assert.strictEqual(response.body.length, helper.initialBlogs.length)
         })
     })
+
+    describe('deleting blogs', ()=>{
+        test('blog can be deleted', async()=>{
+            const blogsAtStart=await helper.blogsInDB()
+            const blogToBeDeleted=blogsAtStart[0]
+
+            await api
+                .delete(`/api/blogs/${blogToBeDeleted.id}`)
+                .expect(204)
+
+            const blogsAtEnd=await helper.blogsInDB()
+            const existingIDs=blogsAtEnd.map(b=>b.id)
+
+            assert(!(blogToBeDeleted.id in existingIDs))
+            assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length-1)
+        })
+    })
 })
 
 after(async () => {
