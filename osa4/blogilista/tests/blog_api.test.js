@@ -10,11 +10,19 @@ const helper=require('./test_helper')
 
 const api = supertest(app)
 
+beforeEach(async () => {
+	await Blog.deleteMany({})
+	await Blog.insertMany(helper.initialBlogs)
+
+	await User.deleteMany({})
+
+	const passwordhash=await bcrypt.hash('sekret', 10)
+	const newUser=new User({ username: 'root', passwordhash })
+
+	await newUser.save()
+})
+
 describe('when initial blogs exist', () => {
-	beforeEach(async () => {
-		await Blog.deleteMany({})
-		await Blog.insertMany(helper.initialBlogs)
-	})
 
 	test('get correct amount of blogs', async() => {
 		const response=await api.get('/api/blogs')
@@ -33,11 +41,15 @@ describe('when initial blogs exist', () => {
 
 	describe('adding blogs', () => {
 		test('valid blog can be added', async() => {
+
+			const initializedUsers=await helper.usersInDB()
+			const someUser=initializedUsers[0]
 			const newBlog={
 				title: 'Will this be added?',
 				author: 'Mr. Unknown',
 				url: 'www.somewhere.co',
-				likes: 4
+				likes: 4,
+				userId: someUser.id
 			}
 
 			await api
@@ -54,10 +66,13 @@ describe('when initial blogs exist', () => {
 		})
 
 		test('likes is set to 0 if null', async() => {
+			const initializedUsers=await helper.usersInDB()
+			const someUser=initializedUsers[0]
 			const newBlog={
 				title: 'No Likes',
 				author: 'Some One',
-				url: 'qwerty.com'
+				url: 'qwerty.com',
+				userId: someUser.id
 			}
 
 			await api
@@ -74,8 +89,11 @@ describe('when initial blogs exist', () => {
 		})
 
 		test('blog without title or url are not added', async() => {
+			const initializedUsers=await helper.usersInDB()
+			const someUser=initializedUsers[0]
 			const newBlog={
-				author: 'Lazy One'
+				author: 'Lazy One',
+				userId: someUser.id
 			}
 			await api
 				.post('/api/blogs')
@@ -135,14 +153,6 @@ describe('when initial blogs exist', () => {
 })
 
 describe('when initial users exist', () => {
-	beforeEach(async() => {
-		await User.deleteMany({})
-
-		const passwordhash=await bcrypt.hash('sekret', 10)
-		const newUser=new User({ username: 'root', passwordhash })
-
-		await newUser.save()
-	})
 
 	describe('adding users', () => {
 		test('creation succeeds with valid data', async() => {
