@@ -144,26 +144,136 @@ describe('when initial users exist', () => {
 		await newUser.save()
 	})
 
-	test('creation succeeds with new username', async() => {
-		const usersAtStart=await helper.usersInDB()
+	describe('adding users', () => {
+		test('creation succeeds with valid data', async() => {
+			const usersAtStart=await helper.usersInDB()
 
-		const newUser={
-			username: 'mizhonka',
-			name: 'MH',
-			password: 'mystery'
-		}
+			const newUser={
+				username: 'mizhonka',
+				name: 'MH',
+				password: 'mystery'
+			}
 
-		await api
-			.post('/api/users')
-			.send(newUser)
-			.expect(201)
-			.expect('Content-Type', /application\/json/)
+			await api
+				.post('/api/users')
+				.send(newUser)
+				.expect(201)
+				.expect('Content-Type', /application\/json/)
 
-		const usersAtEnd=await helper.usersInDB()
-		const usernames=usersAtEnd.map(u => u.username)
+			const usersAtEnd=await helper.usersInDB()
+			const usernames=usersAtEnd.map(u => u.username)
 
-		assert(usernames.includes(newUser.username))
-		assert.strictEqual(usersAtStart.length+1, usersAtEnd.length)
+			assert(usernames.includes(newUser.username))
+			assert.strictEqual(usersAtStart.length+1, usersAtEnd.length)
+		})
+
+		test('user without username is not added', async() => {
+			const usersAtStart=await helper.usersInDB()
+
+			const newUser={
+				name: 'MH',
+				password: 'mystery'
+			}
+
+			await api
+				.post('/api/users')
+				.send(newUser)
+				.expect(400)
+				.expect('Content-Type', /application\/json/)
+
+			const usersAtEnd=await helper.usersInDB()
+			const usernames=usersAtEnd.map(u => u.username)
+
+			assert(!(usernames.includes(newUser.username)))
+			assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+		})
+
+		test('user without password is not added', async() => {
+			const usersAtStart=await helper.usersInDB()
+
+			const newUser={
+				username: 'mizhonka',
+				name: 'MH'
+			}
+
+			await api
+				.post('/api/users')
+				.send(newUser)
+				.expect(400)
+				.expect('Content-Type', /application\/json/)
+
+			const usersAtEnd=await helper.usersInDB()
+			const usernames=usersAtEnd.map(u => u.username)
+
+			assert(!(usernames.includes(newUser.username)))
+			assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+		})
+
+		test('user with invalid username is not added', async() => {
+			const usersAtStart=await helper.usersInDB()
+
+			const newUser={
+				username: 'no',
+				name: 'MH',
+				password: 'mystery'
+			}
+
+			await api
+				.post('/api/users')
+				.send(newUser)
+				.expect(400)
+				.expect('Content-Type', /application\/json/)
+
+			const usersAtEnd=await helper.usersInDB()
+			const usernames=usersAtEnd.map(u => u.username)
+
+			assert(!(usernames.includes(newUser.username)))
+			assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+		})
+
+		test('user with already existing username is not added', async() => {
+			const usersAtStart=await helper.usersInDB()
+
+			const newUser={
+				username: 'root',
+				name: 'MH',
+				password: 'mystery'
+			}
+
+			await api
+				.post('/api/users')
+				.send(newUser)
+				.expect(400)
+				.expect('Content-Type', /application\/json/)
+
+			const usersAtEnd=await helper.usersInDB()
+			const usernames=usersAtEnd.map(u => u.username).filter(u => u===newUser.username)
+
+			assert.strictEqual(usernames.length, 1)
+			assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+		})
+
+		test('user with invalid password is not added', async() => {
+			const usersAtStart=await helper.usersInDB()
+
+			const newUser={
+				username: 'mizhonka',
+				name: 'MH',
+				password: 'ab'
+			}
+
+			await api
+				.post('/api/users')
+				.send(newUser)
+				.expect(400)
+				.expect('Content-Type', /application\/json/)
+
+			const usersAtEnd=await helper.usersInDB()
+			const usernames=usersAtEnd.map(u => u.username)
+
+			assert(!(usernames.includes(newUser.username)))
+			assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+		})
 	})
 })
 
