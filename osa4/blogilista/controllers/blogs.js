@@ -39,9 +39,9 @@ blogsRouter.delete('/:id', async (request, response) => {
     }
 
 	const user=await User.findById(decodedToken.id)
-    const blog=Blog.findById(request.params.id)
+    const blog=await Blog.findById(request.params.id)
 
-    if(blog.user.toString()===user._id) await Blog.findByIdAndDelete(request.params.id)
+    if(blog.user.toString()===user._id.toString()) await Blog.findByIdAndDelete(request.params.id)
     else return response.status(401).json({error: 'invalid user for deletion'})
 
 	response.status(204).end()

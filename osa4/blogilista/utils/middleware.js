@@ -15,7 +15,6 @@ const errorHandler=(error, request, response, next) => {
 const tokenExtractor=(request, response, next)=>{
     const authorization=request.get('authorization')
     if(authorization && authorization.startsWith('Bearer ')){
-        console.log('authorized')
         request.token=authorization.replace('Bearer ', '')
     }
     else request.token=null
