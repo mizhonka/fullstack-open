@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Im1pemhvbmthIiwiaWQiOiI2NWVhYzEwYzY3ZmVmYmFmMzgzNzA1MzYiLCJpYXQiOjE3MTAwNzkyNzJ9.X2r9Z6w6Oc0sJZHeXmBQhw91wc96o_n5Bz1JkerXqxQ
 
 {
-    "title": "Greatest Post Ever",
+    "title": "Second Greatest Post Ever",
     "author": "MH",
     "url": "this.com",
     "userId": "65eac10c67fefbaf38370536"
