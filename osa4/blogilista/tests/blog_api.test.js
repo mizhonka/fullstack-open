@@ -25,13 +25,18 @@ beforeEach(async () => {
 describe('when initial blogs exist', () => {
 
 	test('get correct amount of blogs', async() => {
-		const response=await api.get('/api/blogs')
+		const response=await
+        api
+        .get('/api/blogs')
+        .set({Authorization: `Bearer ${process.env['LOGIN_TOKEN']}`})
 
 		assert.strictEqual(response.body.length, helper.initialBlogs.length)
 	})
 
 	test('blogs have id', async() => {
-		const response=await api.get('/api/blogs')
+		const response=await api
+        .get('/api/blogs')
+        .set({Authorization: `Bearer ${process.env['LOGIN_TOKEN']}`})
 
 		response.body.forEach(blog => {
 			assert('id' in blog)
