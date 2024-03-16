@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import loginService from './services/login'
 import Login from './components/Login'
 import Blog from './components/Blog'
 import Add from './components/Add'
 import Notification from './components/Notification'
+import Toggable from './components/Toggable'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -11,10 +12,6 @@ const App = () => {
     const [username, setUsername]=useState('')
     const [password, setPassword]=useState('')
     const [user, setUser]=useState(null)
-
-    const [title, setTitle]=useState('')
-    const [author, setAuthor]=useState('')
-    const [url, setUrl]=useState('')
 
     const [successMessage, setSuccessMessage]=useState('')
     const [errorMessage, setErrorMessage]=useState('')
@@ -41,14 +38,8 @@ const App = () => {
 
     const handleUsername=event=>setUsername(event.target.value)
     const handlePassword=event=>setPassword(event.target.value)
-    const handleTitle=event=>setTitle(event.target.value)
-    const handleAuthor=event=>setAuthor(event.target.value)
-    const handleUrl=event=>setUrl(event.target.value)
 
     const logOut=()=>{
-        setTitle('')
-        setAuthor('')
-        setUrl('')
         window.localStorage.removeItem('loggedUser')
         setUser(null)
     }
@@ -72,18 +63,17 @@ const App = () => {
         }
     }
 
-    const handleCreate=async event=>{
-        event.preventDefault()
+    const createBlogRef=useRef()
 
+    const createBlog=async (blogObject)=>{
         try{
-            const blog=await blogService.create({title, author, url})
+            const blog=await blogService.create(blogObject)
             updateBlogs()
-            setTitle('')
-            setAuthor('')
-            setUrl('')
-            setSuccessMessage(`${title} by ${author} added`)
+            createBlogRef.current.toggleVisibility()
+            setSuccessMessage(`${blogObject.title} by ${blogObject.author} added`)
             setTimeout(()=>setSuccessMessage(''), 3000)
         } catch (exception){
+            console.log(exception)
             setErrorMessage('failed to add blog')
             setTimeout(()=>setErrorMessage(''), 3000)
         }
@@ -92,9 +82,12 @@ const App = () => {
     if(user===null){
     return (
         <div>
-            <Notification message={errorMessage} style={'error'}/>
-            <h2>login to application:</h2>
-            <Login handleLogin={handleLogin} username={username} handleUsername={handleUsername} password={password} handlePassword={handlePassword}/>
+            <h1>bloglist</h1>
+            <Toggable buttonLabel='login'>
+                <Notification message={errorMessage} style={'error'}/>
+                <h2>login to application:</h2>
+                <Login handleLogin={handleLogin} username={username} handleUsername={handleUsername} password={password} handlePassword={handlePassword}/>
+            </Toggable>
         </div>
     )
     }
@@ -103,10 +96,12 @@ const App = () => {
     <div>
         <Notification message={errorMessage} style={'error'}/>
         <Notification message={successMessage} style={'success'}/>
-        <h2>blogs</h2>
+        <h1>bloglist</h1>
         <div>{user.name} logged in <button onClick={logOut}>logout</button></div>
-        <h3>create new</h3>
-        <Add handleCreate={handleCreate} title={title} handleTitle={handleTitle} author={author} handleAuthor={handleAuthor} url={url} handleUrl={handleUrl}/>
+        <Toggable buttonLabel='new blog' ref={createBlogRef}>
+            <h2>create new</h2>
+            <Add createBlog={createBlog}/>
+        </Toggable>
         {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
         )}
