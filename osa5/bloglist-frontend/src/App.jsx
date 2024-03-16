@@ -3,6 +3,7 @@ import loginService from './services/login'
 import Login from './components/Login'
 import Blog from './components/Blog'
 import Add from './components/Add'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 
 const App = () => {
@@ -14,6 +15,9 @@ const App = () => {
     const [title, setTitle]=useState('')
     const [author, setAuthor]=useState('')
     const [url, setUrl]=useState('')
+
+    const [successMessage, setSuccessMessage]=useState('')
+    const [errorMessage, setErrorMessage]=useState('')
 
     const updateBlogs=()=>{
         blogService.getAll().then(blogs =>
@@ -42,6 +46,9 @@ const App = () => {
     const handleUrl=event=>setUrl(event.target.value)
 
     const logOut=()=>{
+        setTitle('')
+        setAuthor('')
+        setUrl('')
         window.localStorage.removeItem('loggedUser')
         setUser(null)
     }
@@ -57,9 +64,13 @@ const App = () => {
             updateBlogs()
             setUsername('')
             setPassword('')
+            setSuccessMessage('logged in successfully')
+            setTimeout(()=>setSuccessMessage(''), 3000)
         } catch (exception) {
-            console.log('wrong credentials')
-        }}
+            setErrorMessage('wrong username or password')
+            setTimeout(()=>setErrorMessage(''), 3000)
+        }
+    }
 
     const handleCreate=async event=>{
         event.preventDefault()
@@ -70,14 +81,18 @@ const App = () => {
             setTitle('')
             setAuthor('')
             setUrl('')
+            setSuccessMessage(`${title} by ${author} added`)
+            setTimeout(()=>setSuccessMessage(''), 3000)
         } catch (exception){
-            console.log('could not create new blog')
+            setErrorMessage('failed to add blog')
+            setTimeout(()=>setErrorMessage(''), 3000)
         }
     }
 
     if(user===null){
     return (
         <div>
+            <Notification message={errorMessage} style={'error'}/>
             <h2>login to application:</h2>
             <Login handleLogin={handleLogin} username={username} handleUsername={handleUsername} password={password} handlePassword={handlePassword}/>
         </div>
@@ -86,6 +101,8 @@ const App = () => {
 
     return (
     <div>
+        <Notification message={errorMessage} style={'error'}/>
+        <Notification message={successMessage} style={'success'}/>
         <h2>blogs</h2>
         <div>{user.name} logged in <button onClick={logOut}>logout</button></div>
         <h3>create new</h3>
