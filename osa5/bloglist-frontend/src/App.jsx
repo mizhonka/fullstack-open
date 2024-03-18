@@ -16,10 +16,9 @@ const App = () => {
     const [successMessage, setSuccessMessage]=useState('')
     const [errorMessage, setErrorMessage]=useState('')
 
-    const updateBlogs=()=>{
-        blogService.getAll().then(blogs =>
-            setBlogs( blogs )
-        )
+    const updateBlogs=async ()=>{
+        const initialBlogs=await blogService.getAll()
+        setBlogs(initialBlogs)
     }
 
     useEffect(() => {
@@ -79,6 +78,14 @@ const App = () => {
         }
     }
 
+    const toggleBlog=id=>{
+        setBlogs(blogs.map(blog=>
+        blog.id===id
+        ? {...blog, isVisible: !blog.isVisible}
+        : blog
+        ))
+    }
+
     if(user===null){
     return (
         <div>
@@ -103,7 +110,7 @@ const App = () => {
             <Add createBlog={createBlog}/>
         </Toggable>
         {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} toggleBlog={()=>toggleBlog(blog.id)}/>
         )}
     </div>
     )

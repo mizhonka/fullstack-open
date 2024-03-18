@@ -6,6 +6,7 @@ let token=null
 const setToken=newToken=>{token=`Bearer ${newToken}`}
 
 const getAll = () => {
+    if(!token){return []}
     const config={
         headers: {Authorization: token}
     }

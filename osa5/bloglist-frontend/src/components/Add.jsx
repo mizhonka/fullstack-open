@@ -15,7 +15,8 @@ const Add = ({createBlog}) => {
         const newBlog={
             title: title,
             author: author,
-            url: url
+            url: url,
+            isVisible: false
         }
         createBlog(newBlog)
         setTitle('')

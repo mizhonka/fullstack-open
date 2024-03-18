@@ -19,3 +19,12 @@
     border-style: solid;
     color: red;
 }
+
+.blogStyle{
+    padding-top: .2em;
+    padding-left: .5em;
+    border: solid;
+    border-width: .1em;
+    margin-bottom: .5em;
+    margin-top: .2em;
+}
