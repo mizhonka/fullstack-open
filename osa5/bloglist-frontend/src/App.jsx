@@ -78,6 +78,20 @@ const App = () => {
         }
     }
 
+    const handleLike=async (id)=>{
+        const likedBlog=blogs.filter(blog=>blog.id===id)[0]
+        const newBlog={
+            user: likedBlog.user,
+            title: likedBlog.title,
+            author: likedBlog.author,
+            url: likedBlog.url,
+            likes: likedBlog.likes+1,
+            isVisible: false
+        }
+        const response=await blogService.update(newBlog, id)
+        updateBlogs()
+    }
+
     const toggleBlog=id=>{
         setBlogs(blogs.map(blog=>
         blog.id===id
@@ -110,7 +124,7 @@ const App = () => {
             <Add createBlog={createBlog}/>
         </Toggable>
         {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} toggleBlog={()=>toggleBlog(blog.id)}/>
+        <Blog key={blog.id} blog={blog} toggleBlog={()=>toggleBlog(blog.id)} handleLike={()=>handleLike(blog.id)}/>
         )}
     </div>
     )
