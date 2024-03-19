@@ -18,6 +18,7 @@ const App = () => {
 
     const updateBlogs=async ()=>{
         const initialBlogs=await blogService.getAll()
+        initialBlogs.sort((a, b)=> a.likes - b.likes)
         setBlogs(initialBlogs)
     }
 
