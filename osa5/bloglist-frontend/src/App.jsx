@@ -93,6 +93,22 @@ const App = () => {
         updateBlogs()
     }
 
+    const handleDelete=async id=>{
+        const toBeDeleted=blogs.filter(blog=>blog.id===id)[0]
+        if(window.confirm(`Remove ${toBeDeleted.title} by ${toBeDeleted.author}?`)){
+            try{
+                const response=await blogService.deleteBlog(id)
+                updateBlogs()
+                setSuccessMessage('deleted successfully')
+                setTimeout(()=>setSuccessMessage(''), 3000)
+            }
+            catch{
+                setErrorMessage('failed to delete')
+                setTimeout(()=>setErrorMessage(''), 3000)
+            }
+        }
+    }
+
     const toggleBlog=id=>{
         setBlogs(blogs.map(blog=>
         blog.id===id
@@ -125,7 +141,8 @@ const App = () => {
             <Add createBlog={createBlog}/>
         </Toggable>
         {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} toggleBlog={()=>toggleBlog(blog.id)} handleLike={()=>handleLike(blog.id)}/>
+        <Blog key={blog.id} blog={blog} toggleBlog={()=>toggleBlog(blog.id)} handleLike={()=>handleLike(blog.id)}
+        user={user} handleDelete={()=>handleDelete(blog.id)}/>
         )}
     </div>
     )

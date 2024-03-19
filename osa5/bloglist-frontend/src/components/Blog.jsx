@@ -1,6 +1,8 @@
 import '../index.css'
 
-const Blog = ({ blog, toggleBlog, handleLike }) => {
+const Blog = ({ blog, toggleBlog, handleLike, handleDelete, user }) => {
+
+    const showDelete={display: blog.user.username===user.username ? '' : 'none'}
 
     if(blog.isVisible){
         return (
@@ -9,6 +11,7 @@ const Blog = ({ blog, toggleBlog, handleLike }) => {
                 <p>{blog.url}</p>
                 <p>likes {blog.likes} <button onClick={handleLike}>like</button></p>
                 <p>{blog.user.name}</p>
+                <button style={showDelete} onClick={handleDelete}>delete</button>
             </div>
         )
     }
