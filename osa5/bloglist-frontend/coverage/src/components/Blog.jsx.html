@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/35</span>
+                <span class='fraction'>35/35</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>4/5</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/35</span>
+                <span class='fraction'>35/35</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -102,20 +102,20 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -140,17 +140,17 @@ const Blog = ({ blog, toggleBlog, handleLike, handleDelete, user }) =&gt; {
 &nbsp;
   const showDelete={ display: blog.user.username===user.username ? <span class="branch-0 cbranch-no" title="branch not covered" >'' : 'none' }</span>
 &nbsp;
-  if(blog.isVisible)<span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >    return (</span>
-<span class="cstat-no" title="statement not covered" >      &lt;div className='blogStyle'&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;p&gt;{blog.title} {blog.author} &lt;button onClick={toggleBlog}&gt;hide&lt;/button&gt; &lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;p&gt;{blog.url}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;p&gt;likes {blog.likes} &lt;button onClick={handleLike}&gt;like&lt;/button&gt;&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;p&gt;{blog.user.name}&lt;/p&gt;</span>
-<span class="cstat-no" title="statement not covered" >        &lt;button style={showDelete} onClick={handleDelete}&gt;delete&lt;/button&gt;</span>
-<span class="cstat-no" title="statement not covered" >      &lt;/div&gt;</span>
-<span class="cstat-no" title="statement not covered" >    )</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
+  if(blog.isVisible){
+    return (
+      &lt;div className='blogStyle'&gt;
+        &lt;p&gt;{blog.title} {blog.author} &lt;button onClick={toggleBlog}&gt;hide&lt;/button&gt; &lt;/p&gt;
+        &lt;p&gt;{blog.url}&lt;/p&gt;
+        &lt;p&gt;likes {blog.likes} &lt;button onClick={handleLike}&gt;like&lt;/button&gt;&lt;/p&gt;
+        &lt;p&gt;{blog.user.name}&lt;/p&gt;
+        &lt;button style={showDelete} onClick={handleDelete}&gt;delete&lt;/button&gt;
+      &lt;/div&gt;
+    )
+  }
 &nbsp;
   return (
     &lt;div className='blogStyle'&gt;
@@ -175,7 +175,7 @@ export default Blog
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-19T12:28:46.208Z
+                at 2024-03-20T09:25:10.428Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

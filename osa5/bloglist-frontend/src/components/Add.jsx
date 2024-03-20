@@ -28,9 +28,9 @@ const Add = ({ createBlog }) => {
   return(
     <div>
       <form onSubmit={addBlog}>
-        <div>title: <input type="text" value={title} onChange={handleTitle}/></div>
-        <div>author: <input type="text" value={author} onChange={handleAuthor}/></div>
-        <div>url: <input type="text" value={url} onChange={handleUrl}/></div>
+        <div>title: <input type="text" id='title-input' value={title} onChange={handleTitle}/></div>
+        <div>author: <input type="text" id='author-input' value={author} onChange={handleAuthor}/></div>
+        <div>url: <input type="text" id='url-input' value={url} onChange={handleUrl}/></div>
         <div><button type="submit">create</button></div>
       </form>
     </div>
