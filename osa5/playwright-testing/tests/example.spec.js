@@ -1,5 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
-const { name } = require('../playwright.config')
+const { name, timeout } = require('../playwright.config')
 const {loginWith, createBlog} = require('./helper')
 
 describe('Bloglist app', () => {
@@ -59,6 +59,20 @@ describe('Bloglist app', () => {
             await page.getByRole('button', {name: 'like'}).click()
             await page.getByRole('button', {name: 'view'}).click()
             await expect(page.getByText('likes 1')).toBeVisible()
+        })
+
+        test('own blog can be deleted', async({page})=>{
+            await page.getByRole('button', {name: 'view'}).click()
+            await expect(page.getByText('My Blog by Einstein added')).toBeHidden()
+            page.on('dialog', async dialog=>{
+                expect(dialog.message()).toEqual('Remove My Blog by Einstein?')
+                await dialog.accept()
+            })
+            await page.getByRole('button', {name: 'delete'}).click()
+
+            const successDiv=await page.locator('.success')
+            await expect(successDiv).toContainText('deleted successfully')
+            await expect(page.getByText('My Blog Einstein')).toBeHidden()
         })
     })
   })
