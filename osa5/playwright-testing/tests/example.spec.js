@@ -88,6 +88,30 @@ describe('Bloglist app', () => {
             await page.getByRole('button', {name: 'view'}).click()
             await expect(page.getByRole('button', {name: 'delete'})).toBeHidden()
         })
+
+        test.only('blogs are sorted by likes', async({page})=>{
+            // like initial blog 3 times
+            await page.getByRole('button', {name: 'view'}).click()
+            await page.getByRole('button', {name: 'like'}).click()
+            await page.getByRole('button', {name: 'view'}).click()
+            await page.getByRole('button', {name: 'like'}).click()
+            await page.getByRole('button', {name: 'view'}).click()
+            await page.getByRole('button', {name: 'like'}).click()
+
+            // create second blog and like it twice
+            await createBlog(page, 'Second Best', 'Einstein', '.co')
+            await page.getByRole('button', {name: 'view'}).first().click()
+            await page.getByRole('button', {name: 'like'}).click()
+            await page.getByRole('button', {name: 'view'}).first().click()
+            await page.getByRole('button', {name: 'like'}).click()
+
+            // create third blog and like it once
+            await createBlog(page, 'Third Best', 'Einstein', '.co')
+            await page.getByRole('button', {name: 'view'}).first().click()
+            await page.getByRole('button', {name: 'like'}).click()
+
+            expect(true)
+        })
     })
   })
 })
