@@ -12,6 +12,13 @@ describe('Bloglist app', () => {
         password: 'secret'
       }
     })
+    await request.post('/api/users', {
+        data: {
+          name: 'Jimi Albert',
+          username: 'mrhonka',
+          password: 'mystery'
+        }
+    })
 
     await page.goto('/')
   })
@@ -23,13 +30,13 @@ describe('Bloglist app', () => {
 
   describe('Login', () => {
     test('succeeds with correct credentials', async ({ page }) => {
-        loginWith(page, 'mizhonka', 'secret')
+        await loginWith(page, 'mizhonka', 'secret')
 
         await expect(page.getByText('Miranda Honkanen logged in')).toBeVisible()
     })
 
     test('fails with wrong credentials', async ({ page }) => {
-        loginWith(page, 'mizhonka', 'wrong')
+        await loginWith(page, 'mizhonka', 'wrong')
 
         const errorDiv=await page.locator('.error')
         await expect(errorDiv).toContainText('wrong username or password')
@@ -38,11 +45,11 @@ describe('Bloglist app', () => {
 
   describe('When logged in', () => {
     beforeEach(async ({ page }) => {
-        loginWith(page, 'mizhonka', 'secret')
+        await loginWith(page, 'mizhonka', 'secret')
     })
 
     test('a new blog can be created', async ({ page }) => {
-        createBlog(page, 'My Blog', 'Einstein', '.co')
+        await createBlog(page, 'My Blog', 'Einstein', '.co')
 
         const successDiv=await page.locator('.success')
         await expect(successDiv).toContainText('My Blog by Einstein added')
@@ -51,7 +58,7 @@ describe('Bloglist app', () => {
 
     describe('When initial blogs exist', ()=>{
         beforeEach(async ({ page }) => {
-            createBlog(page, 'My Blog', 'Einstein', '.co')
+            await createBlog(page, 'My Blog', 'Einstein', '.co')
         })
 
         test('blog can be liked', async ({page})=>{
@@ -73,6 +80,13 @@ describe('Bloglist app', () => {
             const successDiv=await page.locator('.success')
             await expect(successDiv).toContainText('deleted successfully')
             await expect(page.getByText('My Blog Einstein')).toBeHidden()
+        })
+
+        test('delete button only visible on own blogs', async({page})=>{
+            await page.getByRole('button', {name: 'logout'}).click()
+            loginWith(page, 'mrhonka', 'mystery')
+            await page.getByRole('button', {name: 'view'}).click()
+            await expect(page.getByRole('button', {name: 'delete'})).toBeHidden()
         })
     })
   })
