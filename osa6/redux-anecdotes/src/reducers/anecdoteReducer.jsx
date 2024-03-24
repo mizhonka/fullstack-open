@@ -15,8 +15,7 @@ const anecdoteSlice = createSlice({
     initialState: [],
     reducers: {
         createAnecdote(state, action){
-            const content = asObject(action.payload)
-            state.push(content)
+            state.push(action.payload)
             return state.sort((a,b)=>a.votes-b.votes)
         },
         voteFor(state, action){
