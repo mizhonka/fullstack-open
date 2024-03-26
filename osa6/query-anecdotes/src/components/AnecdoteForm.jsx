@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query'
-import { createAnecdote } from '../services/requests'
+import { createAnecdote, updateVotes } from '../services/requests'
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
