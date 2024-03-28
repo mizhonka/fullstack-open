@@ -82,9 +82,9 @@ const CreateNew = (props) => {
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        content:<input {...content}/><br/>
-        author:<input {...author}/><br/>
-        url for more info:<input {...info}/><br/>
+        content:<input {...{...content,}}/><br/>
+        author:<input {...{...author,}}/><br/>
+        url for more info:<input {...{...info,}}/><br/>
         <button>create</button>
       </form>
     <button onClick={resetForm}>reset</button>
