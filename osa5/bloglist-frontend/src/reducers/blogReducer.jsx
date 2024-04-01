@@ -6,7 +6,7 @@ const blogSlice = createSlice({
     initialState: [],
     reducers: {
         setBlogs(state, action) {
-            return action.payload.sort((a, b) => a.votes - b.votes)
+            return action.payload.sort((a, b) => a.likes - b.likes)
         },
     },
 })
@@ -14,8 +14,46 @@ const blogSlice = createSlice({
 export const initializeBlogs = () => {
     return async (dispatch) => {
         const initial = await blogs.getAll()
-        console.log(initial)
         dispatch(setBlogs(initial))
+    }
+}
+
+export const toggle = (id, visibility) => {
+    return async (dispatch) => {
+        const initial = await blogs.getAll()
+        dispatch(
+            setBlogs(
+                initial.map((b) =>
+                    b.id === id ? { ...b, isVisible: visibility } : b,
+                ),
+            ),
+        )
+    }
+}
+
+export const like = (id) => {
+    return async (dispatch) => {
+        const initial = await blogs.getAll()
+        const likedBlog = initial.filter((blog) => blog.id === id)[0]
+        const newBlog = {
+            user: likedBlog.user,
+            title: likedBlog.title,
+            author: likedBlog.author,
+            url: likedBlog.url,
+            likes: likedBlog.likes + 1,
+            isVisible: false,
+        }
+        await blogs.update(newBlog, id)
+        const all = await blogs.getAll()
+        dispatch(setBlogs(all))
+    }
+}
+
+export const remove = (id) => {
+    return async (dispatch) => {
+        await blogs.deleteBlog(id)
+        const all = await blogs.getAll()
+        dispatch(setBlogs(all))
     }
 }
 

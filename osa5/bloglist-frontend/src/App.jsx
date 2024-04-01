@@ -12,7 +12,6 @@ import blogService from './services/blogs'
 
 const App = () => {
     const dispatch = useDispatch()
-    const [blogs, setBlogs] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
@@ -82,45 +81,6 @@ const App = () => {
             console.log(exception)
             dispatch(setNotification(['failed to add blog', 'error'], 3000))
         }
-    }
-
-    const handleLike = async (id) => {
-        const likedBlog = blogs.filter((blog) => blog.id === id)[0]
-        const newBlog = {
-            user: likedBlog.user,
-            title: likedBlog.title,
-            author: likedBlog.author,
-            url: likedBlog.url,
-            likes: likedBlog.likes + 1,
-            isVisible: false,
-        }
-        const response = await blogService.update(newBlog, id)
-    }
-
-    const handleDelete = async (id) => {
-        const toBeDeleted = blogs.filter((blog) => blog.id === id)[0]
-        if (
-            window.confirm(
-                `Remove ${toBeDeleted.title} by ${toBeDeleted.author}?`,
-            )
-        ) {
-            try {
-                const response = await blogService.deleteBlog(id)
-                dispatch(
-                    setNotification(['deleted successfully', 'success'], 3000),
-                )
-            } catch {
-                dispatch(setNotification(['failed to delete', 'error'], 3000))
-            }
-        }
-    }
-
-    const toggleBlog = (id) => {
-        setBlogs(
-            blogs.map((blog) =>
-                blog.id === id ? { ...blog, isVisible: !blog.isVisible } : blog,
-            ),
-        )
     }
 
     if (user === null) {

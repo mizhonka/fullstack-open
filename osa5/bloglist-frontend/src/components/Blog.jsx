@@ -11,7 +11,9 @@ const Blog = ({ blog, toggleBlog, handleLike, handleDelete, user }) => {
             <div className="blogStyle">
                 <p>
                     {blog.title} {blog.author}{' '}
-                    <button onClick={toggleBlog}>hide</button>{' '}
+                    <button onClick={() => toggleBlog(blog.id, false)}>
+                        hide
+                    </button>{' '}
                 </p>
                 <p>{blog.url}</p>
                 <p>
@@ -30,7 +32,7 @@ const Blog = ({ blog, toggleBlog, handleLike, handleDelete, user }) => {
         <div className="blogStyle">
             <p>
                 {blog.title} {blog.author}{' '}
-                <button onClick={toggleBlog}>view</button>
+                <button onClick={() => toggleBlog(blog.id, true)}>view</button>
             </p>
         </div>
     )
