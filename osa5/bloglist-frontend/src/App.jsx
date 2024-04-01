@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs } from './reducers/blogReducer'
 import { useDispatch } from 'react-redux'
 import loginService from './services/login'
 import Login from './components/Login'
-import Blog from './components/Blog'
+import BlogList from './components/BlogList'
 import Add from './components/Add'
 import Notification from './components/Notification'
 import Toggable from './components/Toggable'
@@ -16,15 +17,7 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
-    const updateBlogs = async () => {
-        const initialBlogs = await blogService.getAll()
-        initialBlogs.sort((a, b) => a.likes - b.likes)
-        setBlogs(initialBlogs)
-    }
-
-    useEffect(() => {
-        updateBlogs()
-    }, [])
+    const updateBlogs=()=>{dispatch(initializeBlogs())}
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -32,8 +25,11 @@ const App = () => {
             const user = JSON.parse(loggedUserJSON)
             setUser(user)
             blogService.setToken(user.token)
-            updateBlogs()
         }
+    }, [])
+
+    useEffect(() => {
+        updateBlogs()
     }, [])
 
     const handleUsername = (event) => setUsername(event.target.value)
@@ -52,7 +48,6 @@ const App = () => {
             setUser(user)
             blogService.setToken(user.token)
             window.localStorage.setItem('loggedUser', JSON.stringify(user))
-            updateBlogs()
             setUsername('')
             setPassword('')
             dispatch(
@@ -70,8 +65,8 @@ const App = () => {
     const createBlog = async (blogObject) => {
         try {
             const blog = await blogService.create(blogObject)
-            updateBlogs()
             createBlogRef.current.toggleVisibility()
+            updateBlogs()
             dispatch(
                 setNotification(
                     [
@@ -98,7 +93,6 @@ const App = () => {
             isVisible: false,
         }
         const response = await blogService.update(newBlog, id)
-        updateBlogs()
     }
 
     const handleDelete = async (id) => {
@@ -110,7 +104,6 @@ const App = () => {
         ) {
             try {
                 const response = await blogService.deleteBlog(id)
-                updateBlogs()
                 dispatch(
                     setNotification(['deleted successfully', 'success'], 3000),
                 )
@@ -158,16 +151,7 @@ const App = () => {
                 <h2>create new</h2>
                 <Add createBlog={createBlog} />
             </Toggable>
-            {blogs.map((blog) => (
-                <Blog
-                    key={blog.id}
-                    blog={blog}
-                    toggleBlog={() => toggleBlog(blog.id)}
-                    handleLike={() => handleLike(blog.id)}
-                    user={user}
-                    handleDelete={() => handleDelete(blog.id)}
-                />
-            ))}
+            <BlogList user={user}/>
         </div>
     )
 }
