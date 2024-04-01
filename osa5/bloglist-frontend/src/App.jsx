@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { setNotification } from "./reducers/notificationReducer";
+import { useDispatch } from "react-redux";
 import loginService from "./services/login";
 import Login from "./components/Login";
 import Blog from "./components/Blog";
@@ -8,13 +10,11 @@ import Toggable from "./components/Toggable";
 import blogService from "./services/blogs";
 
 const App = () => {
+    const dispatch=useDispatch()
     const [blogs, setBlogs] = useState([]);
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [user, setUser] = useState(null);
-
-    const [successMessage, setSuccessMessage] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
 
     const updateBlogs = async () => {
         const initialBlogs = await blogService.getAll();
@@ -55,11 +55,9 @@ const App = () => {
             updateBlogs();
             setUsername("");
             setPassword("");
-            setSuccessMessage("logged in successfully");
-            setTimeout(() => setSuccessMessage(""), 3000);
+            dispatch(setNotification(['logged in successfully', 'success'], 3000))
         } catch (exception) {
-            setErrorMessage("wrong username or password");
-            setTimeout(() => setErrorMessage(""), 3000);
+            dispatch(setNotification(['wrong username or password', 'error'], 3000))
         }
     };
 
@@ -70,14 +68,10 @@ const App = () => {
             const blog = await blogService.create(blogObject);
             updateBlogs();
             createBlogRef.current.toggleVisibility();
-            setSuccessMessage(
-                `${blogObject.title} by ${blogObject.author} added`,
-            );
-            setTimeout(() => setSuccessMessage(""), 3000);
+            dispatch(setNotification([`${blogObject.title} by ${blogObject.author} added`, 'success'], 3000))
         } catch (exception) {
             console.log(exception);
-            setErrorMessage("failed to add blog");
-            setTimeout(() => setErrorMessage(""), 3000);
+            dispatch(setNotification(['failed to add blog', 'error'], 3000))
         }
     };
 
@@ -105,11 +99,9 @@ const App = () => {
             try {
                 const response = await blogService.deleteBlog(id);
                 updateBlogs();
-                setSuccessMessage("deleted successfully");
-                setTimeout(() => setSuccessMessage(""), 3000);
+                dispatch(setNotification(['deleted successfully', 'success'], 3000))
             } catch {
-                setErrorMessage("failed to delete");
-                setTimeout(() => setErrorMessage(""), 3000);
+                dispatch(setNotification(['failed to delete', 'error'], 3000))
             }
         }
     };
@@ -127,7 +119,7 @@ const App = () => {
             <div>
                 <h1>bloglist</h1>
                 <Toggable buttonLabel="login">
-                    <Notification message={errorMessage} style={"error"} />
+                    <Notification style={"error"} />
                     <h2>login to application:</h2>
                     <Login
                         handleLogin={handleLogin}
@@ -143,8 +135,7 @@ const App = () => {
 
     return (
         <div>
-            <Notification message={errorMessage} style={"error"} />
-            <Notification message={successMessage} style={"success"} />
+            <Notification />
             <h1>bloglist</h1>
             <div>
                 {user.name} logged in <button onClick={logOut}>logout</button>
