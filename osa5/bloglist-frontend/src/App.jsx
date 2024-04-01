@@ -17,7 +17,9 @@ const App = () => {
     const [password, setPassword] = useState('')
     const [user, setUser] = useState(null)
 
-    const updateBlogs=()=>{dispatch(initializeBlogs())}
+    const updateBlogs = () => {
+        dispatch(initializeBlogs())
+    }
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedUser')
@@ -151,7 +153,7 @@ const App = () => {
                 <h2>create new</h2>
                 <Add createBlog={createBlog} />
             </Toggable>
-            <BlogList user={user}/>
+            <BlogList user={user} />
         </div>
     )
 }
