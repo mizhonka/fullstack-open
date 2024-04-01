@@ -1,35 +1,35 @@
-import { useState } from "react";
-import PropTypes from "prop-types";
+import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Add = ({ createBlog }) => {
-    const [title, setTitle] = useState("");
-    const [author, setAuthor] = useState("");
-    const [url, setUrl] = useState("");
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
 
-    const handleTitle = (event) => setTitle(event.target.value);
-    const handleAuthor = (event) => setAuthor(event.target.value);
-    const handleUrl = (event) => setUrl(event.target.value);
+    const handleTitle = (event) => setTitle(event.target.value)
+    const handleAuthor = (event) => setAuthor(event.target.value)
+    const handleUrl = (event) => setUrl(event.target.value)
 
     const addBlog = (event) => {
-        event.preventDefault();
+        event.preventDefault()
 
         const newBlog = {
             title: title,
             author: author,
             url: url,
             isVisible: false,
-        };
-        createBlog(newBlog);
-        setTitle("");
-        setAuthor("");
-        setUrl("");
-    };
+        }
+        createBlog(newBlog)
+        setTitle('')
+        setAuthor('')
+        setUrl('')
+    }
 
     return (
         <div>
             <form onSubmit={addBlog}>
                 <div>
-                    title:{" "}
+                    title:{' '}
                     <input
                         type="text"
                         data-testid="title-input"
@@ -39,7 +39,7 @@ const Add = ({ createBlog }) => {
                     />
                 </div>
                 <div>
-                    author:{" "}
+                    author:{' '}
                     <input
                         type="text"
                         data-testid="author-input"
@@ -49,7 +49,7 @@ const Add = ({ createBlog }) => {
                     />
                 </div>
                 <div>
-                    url:{" "}
+                    url:{' '}
                     <input
                         type="text"
                         data-testid="url-input"
@@ -63,11 +63,11 @@ const Add = ({ createBlog }) => {
                 </div>
             </form>
         </div>
-    );
-};
+    )
+}
 
 Add.propTypes = {
     createBlog: PropTypes.func.isRequired,
-};
+}
 
-export default Add;
+export default Add

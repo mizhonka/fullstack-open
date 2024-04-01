@@ -1,21 +1,21 @@
-import "../index.css";
-import PropTypes from "prop-types";
+import '../index.css'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, toggleBlog, handleLike, handleDelete, user }) => {
     const showDelete = {
-        display: blog.user.username === user.username ? "" : "none",
-    };
+        display: blog.user.username === user.username ? '' : 'none',
+    }
 
     if (blog.isVisible) {
         return (
             <div className="blogStyle">
                 <p>
-                    {blog.title} {blog.author}{" "}
-                    <button onClick={toggleBlog}>hide</button>{" "}
+                    {blog.title} {blog.author}{' '}
+                    <button onClick={toggleBlog}>hide</button>{' '}
                 </p>
                 <p>{blog.url}</p>
                 <p>
-                    likes {blog.likes}{" "}
+                    likes {blog.likes}{' '}
                     <button onClick={handleLike}>like</button>
                 </p>
                 <p>{blog.user.name}</p>
@@ -23,18 +23,18 @@ const Blog = ({ blog, toggleBlog, handleLike, handleDelete, user }) => {
                     delete
                 </button>
             </div>
-        );
+        )
     }
 
     return (
         <div className="blogStyle">
             <p>
-                {blog.title} {blog.author}{" "}
+                {blog.title} {blog.author}{' '}
                 <button onClick={toggleBlog}>view</button>
             </p>
         </div>
-    );
-};
+    )
+}
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
@@ -42,6 +42,6 @@ Blog.propTypes = {
     handleLike: PropTypes.func.isRequired,
     handleDelete: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired,
-};
+}
 
-export default Blog;
+export default Blog
