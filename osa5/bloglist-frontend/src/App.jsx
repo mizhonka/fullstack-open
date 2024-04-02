@@ -54,6 +54,7 @@ const App = () => {
             dispatch(
                 setNotification(['logged in successfully', 'success'], 3000),
             )
+            updateBlogs()
         } catch (exception) {
             dispatch(
                 setNotification(['wrong username or password', 'error'], 3000),
