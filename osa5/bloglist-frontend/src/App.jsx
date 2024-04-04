@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
@@ -90,18 +90,39 @@ const App = () => {
         }
     }
 
-    const ListView = () => (
+    const Menu = () => {
+        const padding = {
+            paddingRight: 5,
+        }
+        return (
+            <div>
+                <Link style={padding} to={'/'}>
+                    blogs
+                </Link>
+                <Link style={padding} to={'/users'}>
+                    users
+                </Link>
+                {user.name} logged in <button onClick={logOut}>logout</button>
+            </div>
+        )
+    }
+
+    const BlogListView = () => (
         <div>
             <Notification />
             <h1>bloglist</h1>
-            <div>
-                {user.name} logged in <button onClick={logOut}>logout</button>
-            </div>
             <Toggable buttonLabel="new blog" ref={createBlogRef}>
                 <h2>create new</h2>
                 <Add createBlog={createBlog} />
             </Toggable>
             <BlogList />
+        </div>
+    )
+
+    const UserListView = () => (
+        <div>
+            <Notification />
+            <h1>bloglist</h1>
             <UserList />
         </div>
     )
@@ -148,11 +169,17 @@ const App = () => {
     }
 
     return (
-        <Routes>
-            <Route path="/" element={<ListView />} />
-            <Route path="/:id" element={<UserView />} />
-            <Route path="/blogs/:id" element={<BlogView />} />
-        </Routes>
+        <div>
+            <div>
+                <Menu />
+            </div>
+            <Routes>
+                <Route path="/" element={<BlogListView />} />
+                <Route path="/users" element={<UserListView />} />
+                <Route path="/:id" element={<UserView />} />
+                <Route path="/blogs/:id" element={<BlogView />} />
+            </Routes>
+        </div>
     )
 }
 
