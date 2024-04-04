@@ -18,19 +18,6 @@ export const initializeBlogs = () => {
     }
 }
 
-export const toggle = (id, visibility) => {
-    return async (dispatch) => {
-        const initial = await blogs.getAll()
-        dispatch(
-            setBlogs(
-                initial.map((b) =>
-                    b.id === id ? { ...b, isVisible: visibility } : b,
-                ),
-            ),
-        )
-    }
-}
-
 export const like = (id) => {
     return async (dispatch) => {
         const initial = await blogs.getAll()

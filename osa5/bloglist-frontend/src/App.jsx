@@ -6,6 +6,7 @@ import { initializeUsers } from './reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import loginService from './services/login'
 import User from './components/User'
+import Blog from './components/Blog'
 import Login from './components/Login'
 import BlogList from './components/BlogList'
 import Add from './components/Add'
@@ -89,7 +90,7 @@ const App = () => {
         }
     }
 
-    const ListView=()=>(
+    const ListView = () => (
         <div>
             <Notification />
             <h1>bloglist</h1>
@@ -100,19 +101,30 @@ const App = () => {
                 <h2>create new</h2>
                 <Add createBlog={createBlog} />
             </Toggable>
-            <BlogList user={user} />
-            <UserList/>
+            <BlogList />
+            <UserList />
         </div>
     )
 
-    const UserView=()=>(
+    const UserView = () => (
         <div>
             <Notification />
             <h1>bloglist</h1>
             <div>
                 {user.name} logged in <button onClick={logOut}>logout</button>
             </div>
-            <User/>
+            <User />
+        </div>
+    )
+
+    const BlogView = () => (
+        <div>
+            <Notification />
+            <h1>bloglist</h1>
+            <div>
+                {user.name} logged in <button onClick={logOut}>logout</button>
+            </div>
+            <Blog />
         </div>
     )
 
@@ -137,8 +149,9 @@ const App = () => {
 
     return (
         <Routes>
-            <Route path='/' element={<ListView/>}/>
-            <Route path='/:id' element={<UserView/>}/>
+            <Route path="/" element={<ListView />} />
+            <Route path="/:id" element={<UserView />} />
+            <Route path="/blogs/:id" element={<BlogView />} />
         </Routes>
     )
 }
