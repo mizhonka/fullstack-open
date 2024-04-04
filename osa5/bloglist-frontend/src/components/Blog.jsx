@@ -42,6 +42,12 @@ const Blog = () => {
             </p>
             <p>added by {blog.author}</p>
             <button onClick={handleDelete}>delete</button>
+            <h2>comments</h2>
+            <ul>
+                {blog.comments.map((c) => (
+                    <li key={c}>{c}</li>
+                ))}
+            </ul>
         </div>
     )
 }
