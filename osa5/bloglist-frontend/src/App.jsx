@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import loginService from './services/login'
+import User from './components/User'
 import Login from './components/Login'
 import BlogList from './components/BlogList'
 import Add from './components/Add'
@@ -87,6 +89,33 @@ const App = () => {
         }
     }
 
+    const ListView=()=>(
+        <div>
+            <Notification />
+            <h1>bloglist</h1>
+            <div>
+                {user.name} logged in <button onClick={logOut}>logout</button>
+            </div>
+            <Toggable buttonLabel="new blog" ref={createBlogRef}>
+                <h2>create new</h2>
+                <Add createBlog={createBlog} />
+            </Toggable>
+            <BlogList user={user} />
+            <UserList/>
+        </div>
+    )
+
+    const UserView=()=>(
+        <div>
+            <Notification />
+            <h1>bloglist</h1>
+            <div>
+                {user.name} logged in <button onClick={logOut}>logout</button>
+            </div>
+            <User/>
+        </div>
+    )
+
     if (user === null) {
         return (
             <div>
@@ -107,19 +136,10 @@ const App = () => {
     }
 
     return (
-        <div>
-            <Notification />
-            <h1>bloglist</h1>
-            <div>
-                {user.name} logged in <button onClick={logOut}>logout</button>
-            </div>
-            <Toggable buttonLabel="new blog" ref={createBlogRef}>
-                <h2>create new</h2>
-                <Add createBlog={createBlog} />
-            </Toggable>
-            <BlogList user={user} />
-            <UserList/>
-        </div>
+        <Routes>
+            <Route path='/' element={<ListView/>}/>
+            <Route path='/:id' element={<UserView/>}/>
+        </Routes>
     )
 }
 
