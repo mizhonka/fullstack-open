@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import blogs from '../services/blogs'
 
 const blogSlice = createSlice({
-    name: blogs,
+    name: 'blogs',
     initialState: [],
     reducers: {
         setBlogs(state, action) {

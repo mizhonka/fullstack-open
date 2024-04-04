@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/userReducer'
 import { useDispatch } from 'react-redux'
 import loginService from './services/login'
 import Login from './components/Login'
@@ -9,6 +10,7 @@ import Add from './components/Add'
 import Notification from './components/Notification'
 import Toggable from './components/Toggable'
 import blogService from './services/blogs'
+import UserList from './components/UserList'
 
 const App = () => {
     const dispatch = useDispatch()
@@ -30,6 +32,7 @@ const App = () => {
     }, [])
 
     useEffect(() => {
+        dispatch(initializeUsers())
         updateBlogs()
     }, [])
 
@@ -115,6 +118,7 @@ const App = () => {
                 <Add createBlog={createBlog} />
             </Toggable>
             <BlogList user={user} />
+            <UserList/>
         </div>
     )
 }
