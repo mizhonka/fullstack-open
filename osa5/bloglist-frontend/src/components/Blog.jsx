@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { like, remove } from '../reducers/blogReducer'
+import { like, remove, comment } from '../reducers/blogReducer'
+import { handleComment } from '../reducers/commentReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { useParams } from 'react-router-dom'
 
@@ -9,6 +10,7 @@ const Blog = () => {
     const navigate = useNavigate()
     const id = useParams().id
     const blogs = useSelector((state) => state['blogs'])
+    const curComment = useSelector((state) => state['comment'])
     const blog = blogs.find((b) => b.id === id)
 
     const handleLike = () => {
@@ -29,6 +31,16 @@ const Blog = () => {
         }
     }
 
+    const typeComment = (event) => {
+        dispatch(handleComment(event.target.value))
+    }
+
+    const postComment = (event) => {
+        event.preventDefault()
+        dispatch(comment(id, curComment))
+        dispatch(handleComment(''))
+    }
+
     if (!blog) {
         return null
     }
@@ -43,6 +55,10 @@ const Blog = () => {
             <p>added by {blog.author}</p>
             <button onClick={handleDelete}>delete</button>
             <h2>comments</h2>
+            <form onSubmit={postComment}>
+                <input type="text" value={curComment} onChange={typeComment} />
+                <button type="submit">add comment</button>
+            </form>
             <ul>
                 {blog.comments.map((c) => (
                     <li key={c}>{c}</li>

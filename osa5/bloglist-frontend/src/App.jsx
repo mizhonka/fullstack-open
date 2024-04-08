@@ -131,9 +131,6 @@ const App = () => {
         <div>
             <Notification />
             <h1>bloglist</h1>
-            <div>
-                {user.name} logged in <button onClick={logOut}>logout</button>
-            </div>
             <User />
         </div>
     )
@@ -142,9 +139,6 @@ const App = () => {
         <div>
             <Notification />
             <h1>bloglist</h1>
-            <div>
-                {user.name} logged in <button onClick={logOut}>logout</button>
-            </div>
             <Blog />
         </div>
     )

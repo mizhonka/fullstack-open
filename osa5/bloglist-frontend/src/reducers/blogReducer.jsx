@@ -44,5 +44,13 @@ export const remove = (id) => {
     }
 }
 
+export const comment = (id, comment) => {
+    return async (dispatch) => {
+        await blogs.commentBlog(id, comment)
+        const all = await blogs.getAll()
+        dispatch(setBlogs(all))
+    }
+}
+
 export const { setBlogs } = blogSlice.actions
 export default blogSlice.reducer
