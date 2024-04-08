@@ -4,6 +4,7 @@ import { like, remove, comment } from '../reducers/blogReducer'
 import { handleComment } from '../reducers/commentReducer'
 import { setNotification } from '../reducers/notificationReducer'
 import { useParams } from 'react-router-dom'
+import { Button, List, ListItem, StyledLink } from '../styles'
 
 const Blog = () => {
     const dispatch = useDispatch()
@@ -48,22 +49,22 @@ const Blog = () => {
     return (
         <div>
             <h1>{blog.title}</h1>
-            <a href={blog.url}>{blog.url}</a>
+            <StyledLink href={blog.url}>@{blog.url}</StyledLink>
             <p>
-                {blog.likes} likes <button onClick={handleLike}>like</button>
+                {blog.likes} likes <Button onClick={handleLike}>like</Button>
             </p>
             <p>added by {blog.author}</p>
-            <button onClick={handleDelete}>delete</button>
+            <Button onClick={handleDelete}>delete</Button>
             <h2>comments</h2>
             <form onSubmit={postComment}>
                 <input type="text" value={curComment} onChange={typeComment} />
-                <button type="submit">add comment</button>
+                <Button type="submit">add comment</Button>
             </form>
-            <ul>
+            <List>
                 {blog.comments.map((c) => (
-                    <li key={c}>{c}</li>
+                    <ListItem key={c}>{c}</ListItem>
                 ))}
-            </ul>
+            </List>
         </div>
     )
 }

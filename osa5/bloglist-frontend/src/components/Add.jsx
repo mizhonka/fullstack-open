@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
+import { Button } from '../styles'
 
 const Add = ({ createBlog }) => {
     const [title, setTitle] = useState('')
@@ -59,7 +60,7 @@ const Add = ({ createBlog }) => {
                     />
                 </div>
                 <div>
-                    <button type="submit">create</button>
+                    <Button type="submit">create</Button>
                 </div>
             </form>
         </div>

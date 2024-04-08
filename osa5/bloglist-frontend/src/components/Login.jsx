@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types'
+import { Button } from '../styles'
 
 const Login = ({
     handleLogin,
@@ -28,7 +29,7 @@ const Login = ({
                 />
             </div>
             <div>
-                <button type="submit">login</button>
+                <Button type="submit">login</Button>
             </div>
         </form>
     </div>

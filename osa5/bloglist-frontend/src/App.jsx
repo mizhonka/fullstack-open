@@ -1,4 +1,6 @@
+import './index.css'
 import { useState, useEffect, useRef } from 'react'
+import { StyledDiv, Button, Navigation } from './styles'
 import { Routes, Route, Link } from 'react-router-dom'
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -91,19 +93,16 @@ const App = () => {
     }
 
     const Menu = () => {
-        const padding = {
-            paddingRight: 5,
-        }
         return (
-            <div>
-                <Link style={padding} to={'/'}>
+            <Navigation>
+                <Link className={'react_link'} to={'/'}>
                     blogs
                 </Link>
-                <Link style={padding} to={'/users'}>
+                <Link className={'react_link'} to={'/users'}>
                     users
                 </Link>
-                {user.name} logged in <button onClick={logOut}>logout</button>
-            </div>
+                {user.name} logged in <Button onClick={logOut}>logout</Button>
+            </Navigation>
         )
     }
 
@@ -145,7 +144,7 @@ const App = () => {
 
     if (user === null) {
         return (
-            <div>
+            <StyledDiv>
                 <h1>bloglist</h1>
                 <Toggable buttonLabel="login">
                     <Notification style={'error'} />
@@ -158,12 +157,12 @@ const App = () => {
                         handlePassword={handlePassword}
                     />
                 </Toggable>
-            </div>
+            </StyledDiv>
         )
     }
 
     return (
-        <div>
+        <StyledDiv>
             <div>
                 <Menu />
             </div>
@@ -173,7 +172,7 @@ const App = () => {
                 <Route path="/:id" element={<UserView />} />
                 <Route path="/blogs/:id" element={<BlogView />} />
             </Routes>
-        </div>
+        </StyledDiv>
     )
 }
 
