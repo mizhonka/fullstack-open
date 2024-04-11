@@ -10,13 +10,14 @@ require('dotenv').config()
 
 const MONGODB_URI = process.env.MONGODB_URI
 
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('connected to MongoDB')
-  })
-  .catch((error) => {
-    console.log('error connection to MongoDB:', error.message)
-  })
+mongoose
+    .connect(MONGODB_URI)
+    .then(() => {
+        console.log('connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('error connection to MongoDB:', error.message)
+    })
 
 const typeDefs = `
   type Query {
@@ -56,73 +57,75 @@ const typeDefs = `
 `
 
 const resolvers = {
-  Query: {
-    bookCount: async () => Books.collection.countDocuments(),
-    authorCount: async () => Authors.collection.countDocuments(),
-    allBooks: async (root, args) => {
-        if(args.genre){
-            return Books.find({genres: args.genre})
-        }
-        return Books.find({})
-    },
-    allAuthors: async ()=>{return Authors.find({})}
-  },
-  Author: {
-    bookCount: async (root)=>{
-        const foundBooks=await Books.find({author: root})
-        return foundBooks.length
-    }
-  },
-  Mutation: {
-    addBook: async (root, args)=>{
-        const newAuthor=Authors({name: args.author})
-        const foundAuthor = await Authors.findOne({name: args.author})
-        if(!foundAuthor){
-            try{
-                await newAuthor.save()
+    Query: {
+        bookCount: async () => Books.collection.countDocuments(),
+        authorCount: async () => Authors.collection.countDocuments(),
+        allBooks: async (root, args) => {
+            if (args.genre) {
+                return Books.find({ genres: args.genre })
             }
-            catch (error){
-                throw new GraphQLError('Adding author failed', {
+            return Books.find({})
+        },
+        allAuthors: async () => {
+            return Authors.find({})
+        },
+    },
+    Author: {
+        bookCount: async (root) => {
+            const foundBooks = await Books.find({ author: root })
+            return foundBooks.length
+        },
+    },
+    Mutation: {
+        addBook: async (root, args) => {
+            const newAuthor = Authors({ name: args.author })
+            const foundAuthor = await Authors.findOne({ name: args.author })
+            if (!foundAuthor) {
+                try {
+                    await newAuthor.save()
+                } catch (error) {
+                    throw new GraphQLError('Adding author failed', {
+                        extensions: {
+                            code: 'BAD_USER_INPUT',
+                            invalidArgs: args.author,
+                            error,
+                        },
+                    })
+                }
+            }
+            const newBook = Books({ ...args, author: newAuthor })
+            try {
+                await newBook.save()
+            } catch (error) {
+                throw new GraphQLError('Adding book failed', {
                     extensions: {
                         code: 'BAD_USER_INPUT',
-                        invalidArgs: args.author,
-                        error
-                    }
+                        invalidArgs: args.title,
+                        error,
+                    },
                 })
             }
-        }
-        const newBook=Books({...args, author: newAuthor})
-        try{
-            await newBook.save()
-        }
-        catch (error){
-            throw new GraphQLError('Adding book failed', {
-                extensions: {
-                    code: 'BAD_USER_INPUT',
-                    invalidArgs: args.title,
-                    error
-                }
-            })
-        }
-        return newBook
+            return newBook
+        },
+        editAuthor: async (root, args) => {
+            const author = await Authors.findOne({ name: args.name })
+            if (!author) {
+                return null
+            }
+            author.born = args.setBornTo
+            await author.save()
+            return author
+        },
     },
-    editAuthor: async (root, args)=>{
-        const author=await Authors.findOne({name: args.name})
-        if(!author){return null}
-        author.born = args.setBornTo
-        await author.save()
-        return author
-    }
-  }
 }
 
 const server = new ApolloServer({
-  typeDefs,
-  resolvers,
+    typeDefs,
+    resolvers,
 })
 
 startStandaloneServer(server, {
-  listen: { port: 4000 },
+    listen: { port: 4000 },
 }).then(({ url }) => {
-  console.log(`Server ready at ${url}`)
+    console.log(`Server ready at ${url}`)
 })
