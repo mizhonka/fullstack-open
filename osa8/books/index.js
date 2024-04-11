@@ -1,6 +1,5 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v1: uuid } = require('uuid')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -138,31 +137,36 @@ const resolvers = {
     bookCount: async () => Books.collection.countDocuments(),
     authorCount: async () => Authors.collection.countDocuments(),
     allBooks: async (root, args) => {
+        if(args.genre){
+            return Books.find({genres: args.genre})
+        }
         return Books.find({})
     },
     allAuthors: async ()=>{return Authors.find({})}
   },
   Author: {
-    bookCount: (root)=>{
-        return books.filter(b=>b.author===root.name).length
+    bookCount: async (root)=>{
+        const foundBooks=await Books.find({author: root})
+        return foundBooks.length
     }
   },
   Mutation: {
     addBook: async (root, args)=>{
-        if(!authors.find(a=>a.name===args.author)){
-            const newAuthor=Authors({name: args.author})
+        const newAuthor=Authors({name: args.author})
+        const foundAuthor = await Authors.findOne({name: args.author})
+        if(!foundAuthor){
             await newAuthor.save()
         }
-        const newBook=Books({...args})
+        const newBook=Books({...args, author: newAuthor})
         await newBook.save()
         return newBook
     },
-    editAuthor: (root, args)=>{
-        const author=authors.find(a=>a.name===args.name)
+    editAuthor: async (root, args)=>{
+        const author=await Authors.findOne({name: args.name})
         if(!author){return null}
-        const editedAuthor={...author, born: args.setBornTo}
-        authors=authors.map(a=>a.name===author.name ? editedAuthor : a)
-        return editedAuthor
+        author.born = args.setBornTo
+        await author.save()
+        return author
     }
   }
 }
