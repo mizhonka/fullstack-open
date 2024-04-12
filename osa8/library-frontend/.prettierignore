@@ -1,0 +1,4 @@
+*.json
+.prettierrc
+node_modules
+*.md

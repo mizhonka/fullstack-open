@@ -100,6 +100,12 @@ const resolvers = {
             return foundBooks.length
         },
     },
+    Book: {
+        author: async (root)=>{
+            const foundAuthor=await Authors.findOne({_id: root.author})
+            return foundAuthor
+        }
+    },
     Mutation: {
         addBook: async (root, args, context) => {
             const newAuthor = Authors({ name: args.author })
