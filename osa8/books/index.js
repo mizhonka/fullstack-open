@@ -101,10 +101,10 @@ const resolvers = {
         },
     },
     Book: {
-        author: async (root)=>{
-            const foundAuthor=await Authors.findOne({_id: root.author})
+        author: async (root) => {
+            const foundAuthor = await Authors.findOne({ _id: root.author })
             return foundAuthor
-        }
+        },
     },
     Mutation: {
         addBook: async (root, args, context) => {
@@ -131,7 +131,8 @@ const resolvers = {
                     })
                 }
             }
-            const newBook = Books({ ...args, author: newAuthor })
+            const bookAuthor = await Authors.findOne({ name: args.author })
+            const newBook = Books({ ...args, author: bookAuthor })
             try {
                 await newBook.save()
             } catch (error) {
