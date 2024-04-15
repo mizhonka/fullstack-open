@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useMutation } from '@apollo/client'
-import { LOGIN } from '../queries'
+import { CURRENT_USER, LOGIN } from '../queries'
 
 const Login = ({ show, setToken, setPage }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [login, result] = useMutation(LOGIN)
+    const [login, result] = useMutation(LOGIN, {
+        refetchQueries: [{ query: CURRENT_USER }],
+    })
 
     useEffect(() => {
         if (result.data) {
