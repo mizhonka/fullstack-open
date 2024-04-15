@@ -1,8 +1,11 @@
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
+import { useState } from 'react'
+import { initialGenres, setInitialGenres } from '../initialGenres'
 
 const Books = (props) => {
-    const result = useQuery(ALL_BOOKS)
+    const [genre, setGenre] = useState('')
+    const result = useQuery(ALL_BOOKS, { variables: genre ? { genre } : {} })
     if (!props.show) {
         return null
     }
@@ -12,6 +15,9 @@ const Books = (props) => {
     }
 
     const books = result.data.allBooks
+    if (!genre && initialGenres.length === 0) {
+        setInitialGenres(books)
+    }
 
     return (
         <div>
@@ -33,6 +39,17 @@ const Books = (props) => {
                     ))}
                 </tbody>
             </table>
+            <h3>choose genre</h3>
+            <select
+                defaultValue={genre}
+                onChange={({ target }) => setGenre(target.value)}
+            >
+                {initialGenres.map((g) => (
+                    <option key={g} value={g}>
+                        {g}
+                    </option>
+                ))}
+            </select>
         </div>
     )
 }

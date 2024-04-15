@@ -48,7 +48,7 @@ const Authors = (props) => {
                     ))}
                 </tbody>
             </table>
-            <h2>set birthyear</h2>
+            <h3>set birthyear</h3>
             <form onSubmit={submit}>
                 <select onChange={({ target }) => setName(target.value)}>
                     {authors.map((a) => (

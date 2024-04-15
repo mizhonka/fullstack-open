@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { CREATE_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries'
+import { addNewGenre } from '../initialGenres'
 
 const NewBook = (props) => {
     const [title, setTitle] = useState('')
@@ -20,6 +21,7 @@ const NewBook = (props) => {
         event.preventDefault()
 
         createBook({ variables: { title, published, author, genres } })
+        genres.map((g) => addNewGenre(g))
 
         setTitle('')
         setPublished('')
