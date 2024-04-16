@@ -14,9 +14,9 @@ const BMICalculator=(weight: number, height: number):string=>{
             return 'Overweight';
         }
         return 'Obese';
-    }
+    };
 
     return bmiCalculator(height, weight);
-}
+};
 
 export default BMICalculator;
