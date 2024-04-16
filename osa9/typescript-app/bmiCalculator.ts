@@ -1,17 +1,17 @@
-const calculator = (height: number, weigth: number):string=>{
-    const heightInM = height/100
-    const bmi = weigth/(heightInM*heightInM)
+const bmiCalculator = (height: number, weigth: number):string=>{
+    const heightInM = height/100;
+    const bmi = weigth/(heightInM*heightInM);
 
     if(bmi<18.5){
-        return 'Underweight'
+        return 'Underweight';
     }
     if(18.5 <= bmi && bmi<=24.9){
-        return 'Normal (healthy weight)'
+        return 'Normal (healthy weight)';
     }
     if(25 <= bmi && bmi <= 29.9){
-        return 'Overweigth'
+        return 'Overweigth';
     }
-    return 'Obese'
+    return 'Obese';
 }
 
-console.log(calculator(180, 74))
+console.log(bmiCalculator(180, 74));
