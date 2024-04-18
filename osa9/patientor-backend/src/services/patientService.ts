@@ -1,10 +1,10 @@
 import patientData from '../data/patients';
 import { v1 as uuid } from 'uuid';
 
-import { Patient, PatientSecure, NewPatient } from '../types';
+import { Patient, NewPatient } from '../types';
 
-const getAll=(): PatientSecure[]=>{
-    return patientData.map(({ id, name, dateOfBirth, gender, occupation }) => ({id, name, dateOfBirth, gender, occupation}));
+const getAll=(): Patient[]=>{
+    return patientData;
 };
 
 const getWithId=(id: string): Patient=>{
