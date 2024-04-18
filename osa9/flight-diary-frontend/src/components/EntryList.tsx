@@ -1,7 +1,15 @@
 import { NonSensitiveDiaryEntry } from "../types"
+import { useState, useEffect } from "react";
+import diaryService from '../services/diaries'
 import Entry from "./Entry"
 
-const EntryList = ({entries}:{entries: NonSensitiveDiaryEntry[]})=>{
+const EntryList = ()=>{
+    const [entries, setEntries]=useState<NonSensitiveDiaryEntry[]>([]);
+
+    useEffect(()=>{
+        diaryService.getAll().then(data=>setEntries(data));
+    }, [])
+
     const mapped = entries.map((e,i) => <Entry key={i} entry={e}/>)
 
     return (
