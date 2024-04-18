@@ -7,11 +7,20 @@ const getAll=(): PatientSecure[]=>{
     return patientData.map(({ id, name, dateOfBirth, gender, occupation }) => ({id, name, dateOfBirth, gender, occupation}));
 };
 
+const getWithId=(id: string): Patient=>{
+    const found = patientData.find(p=>p.id===id);
+    if(!found){
+        throw new Error(`Patient with id ${id} not found`);
+    }
+    return found;
+};
+
 const addNew=(patient: NewPatient):Patient=>{
     const id = uuid();
     const newPatient={
         id: id,
-        ...patient
+        ...patient,
+        entries: []
     };
     patientData.push(newPatient);
     return newPatient;
@@ -19,5 +28,6 @@ const addNew=(patient: NewPatient):Patient=>{
 
 export default {
     getAll,
-    addNew
+    addNew,
+    getWithId
 };
