@@ -1,11 +1,11 @@
-interface ContentProps{
-    name: string,
-    exerciseCount: number
-}
+import { CoursePart } from "../types";
+import Part from "./Part";
 
-const Content=(props: ContentProps)=>{
+const Content=({part}: {part: CoursePart})=>{
     return(
-        <p>{props.name} {props.exerciseCount}</p>
+        <div>
+            <Part part={part}/>
+        </div>
     )
 }
 
