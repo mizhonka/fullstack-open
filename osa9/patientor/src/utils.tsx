@@ -1,4 +1,4 @@
-import { Patient, Gender } from './types';
+import { Patient, Gender, Entry } from './types';
 
 const isString=(text: unknown):text is string=>{
     return typeof text === 'string' || text instanceof String;
@@ -60,12 +60,21 @@ const parseGender=(gender: unknown):Gender=>{
     return gender;
 };
 
+const parseEntries=(entries: unknown):Entry[]=>{
+    if(!Array.isArray(entries)){
+        throw new Error('Incorrect entries: ' + entries);
+    }
+
+    return entries;
+};
+
 const toPatient = (object:unknown): Patient => {
     if ( !object || typeof object !== 'object' ) {
         throw new Error('Incorrect or missing data');
       }
 
-      if ('name' in object && 'dateOfBirth' in object && 'ssn' in object && 'gender' in object && 'occupation' in object && 'id' in object)  {
+      if ('name' in object && 'dateOfBirth' in object && 'ssn' in object && 'gender' in object && 'occupation' in object
+      && 'id' in object && 'entries' in object)  {
         const patient: Patient = {
           id: parseId(object.id),
           name: parseName(object.name),
@@ -73,7 +82,7 @@ const toPatient = (object:unknown): Patient => {
           ssn: parseSsn(object.ssn),
           gender: parseGender(object.gender),
           occupation: parseOccupation(object.occupation),
-          entries: []
+          entries: parseEntries(object.entries)
         };
 
         return patient;
